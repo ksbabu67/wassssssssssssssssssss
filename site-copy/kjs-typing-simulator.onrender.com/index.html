@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Typing Bubbles Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+  <div class="letters" id="letters">Collected: <span id="collected"> </span></div>
+  <div class="current">Current: <span id="currentTyped"></span></div>
+    <div class="score" id="score">Score: 0</div>
+    <div class="timer" id="timer">Time: 0.0s</div>
+    <div class="controls">
+      <button id="startBtn" class="start-btn-large">Start</button>
+      <button id="resetBtn">Reset</button>
+      <label class="voice-toggle">
+        <input type="checkbox" id="voiceToggle" checked /> Voice
+      </label>
+    </div>
+    <a id="originalLink" class="original-link" href="https://kjs-typing-simulator.onrender.com" target="_blank" rel="noopener noreferrer">Original site</a>
+  </header>
+
+  <main id="gameArea" tabindex="0">
+    <div id="info" class="overlay">Press Start to play. Press the first letter shown to pop the bubble.</div>
+    <!-- large on-screen countdown shown during play -->
+    <div id="bigTimer" class="big-timer" aria-hidden="true"></div>
+    <div id="hint" class="hint" aria-live="polite">Press: <span id="hintLetter"> </span></div>
+    <div id="touchKeyboard" class="touch-keyboard" aria-hidden="true"></div>
+  </main>
+
+  <footer class="footer">Type the letters shown in the bubble to pop them. Faster typing gives more score.</footer>
+
+
+  <script src="script.js"></script>
+</body>
+</html>
