@@ -294,7 +294,7 @@ function tick(){
   const now = performance.now();
   const elapsed = (now - startTime)/1000;
   const remaining = Math.max(0, gameDuration - elapsed);
-  timerEl.textContent = `Time: ${remaining.toFixed(1)}s`;
+  if (timerEl) timerEl.textContent = `Time: ${remaining.toFixed(1)}s`;
   // update large countdown (integer seconds for readability)
   try{ if (bigTimerEl && bigTimerEl.classList.contains('running')){
     bigTimerEl.textContent = `${Math.ceil(remaining)}s`;
@@ -349,7 +349,7 @@ function endGame(customMessage){
   }catch(e){}
   // show a large Game Over in the big timer area for emphasis
   try{ const big = document.getElementById('bigTimer'); if (big){ big.textContent = 'GAME OVER'; big.style.display = 'block'; }}catch(e){}
-  timerEl.textContent = `Time: 0.0s`;
+  if (timerEl) timerEl.textContent = `Time: 0.0s`;
 }
 
 // Auto-start the game when the page fully loads
