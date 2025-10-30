@@ -41,6 +41,7 @@ const hintLetterEl = document.getElementById('hintLetter');
 const currentTypedEl = document.getElementById('currentTyped');
 const info = document.getElementById('info');
 const touchKeyboard = document.getElementById('touchKeyboard');
+const bigTimerEl = document.getElementById('bigTimer');
 
 let bubbles = new Map(); // id -> {el, word, index, spawnTime}
 let nextId = 1;
@@ -132,6 +133,8 @@ function startGame(){
   lastTick = startTime;
   // start the tick loop for the countdown timer
   requestAnimationFrame(tick);
+  // show large countdown
+  try{ if (bigTimerEl){ bigTimerEl.classList.add('running'); bigTimerEl.style.display = 'flex'; }}catch(e){}
   // spawn every 1200ms initially
   spawnInterval = setInterval(spawnLoop, 1200);
   // give focus to game area so it receives key events
@@ -163,6 +166,8 @@ function resetGame(){
   closeSplitTimer();
   // clear any big timer/game over display
   clearBigTimer();
+  // remove play again button if present
+  try{ const btn = document.getElementById('playAgainBtn'); if (btn) btn.remove(); }catch(e){}
 }
 
 // clear bigTimer display when reset
@@ -294,6 +299,10 @@ function tick(){
   const elapsed = (now - startTime)/1000;
   const remaining = Math.max(0, gameDuration - elapsed);
   timerEl.textContent = `Time: ${remaining.toFixed(1)}s`;
+  // update large countdown (integer seconds for readability)
+  try{ if (bigTimerEl && bigTimerEl.classList.contains('running')){
+    bigTimerEl.textContent = `${Math.ceil(remaining)}s`;
+  }}catch(e){}
   if (remaining <= 0){
     // time's up
     endGame();
@@ -325,6 +334,24 @@ function endGame(customMessage){
   const msg = customMessage || `Game Over! Score: ${score}`;
   info.textContent = msg;
   info.style.display = 'block';
+  // add a Play Again button inside the overlay for convenience
+  try{
+    let btn = document.getElementById('playAgainBtn');
+    if (!btn){
+      btn = document.createElement('button');
+      btn.id = 'playAgainBtn';
+      btn.textContent = 'Play Again';
+      btn.style.marginTop = '12px';
+      btn.className = 'start-btn-large';
+      btn.addEventListener('click', ()=>{
+        // reset and start a new game immediately
+        resetGame();
+        setTimeout(()=>startGame(), 150);
+      });
+      info.appendChild(document.createElement('br'));
+      info.appendChild(btn);
+    }
+  }catch(e){}
   // show a large Game Over in the big timer area for emphasis
   try{ const big = document.getElementById('bigTimer'); if (big){ big.textContent = 'GAME OVER'; big.style.display = 'block'; }}catch(e){}
   timerEl.textContent = `Time: 0.0s`;
