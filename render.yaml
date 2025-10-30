@@ -1,0 +1,8 @@
+services:
+  - type: static
+    name: typing-simulator-static
+    env: static
+    branch: main
+    staticPublishPath: site-copy/kjs-typing-simulator.onrender.com
+    # buildCommand: ''
+    # If you need a build step (e.g., bundler), fill buildCommand accordingly

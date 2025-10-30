@@ -161,6 +161,13 @@ function resetGame(){
   timerEl.textContent = 'Time: 0.0s';
   // ensure any external timer iframe is removed
   closeSplitTimer();
+  // clear any big timer/game over display
+  clearBigTimer();
+}
+
+// clear bigTimer display when reset
+function clearBigTimer(){
+  try{ const big = document.getElementById('bigTimer'); if (big){ big.textContent = ''; big.style.display = 'none'; }}catch(e){}
 }
 
 function updateScore(){ scoreEl.textContent = `Score: ${score}` }
@@ -296,18 +303,40 @@ function tick(){
 }
 
 function endGame(customMessage){
+  // stop game loop and spawning
   running = false;
   clearInterval(spawnInterval);
   spawnInterval = null;
   // cleanup external iframe if present
   closeSplitTimer();
-  // update UI
-  startBtn.disabled = false;
-  resetBtn.disabled = true;
-  info.textContent = customMessage || `Time's up! Score: ${score}`;
+  // cancel any speaking
+  try{ if (window.speechSynthesis) { window.speechSynthesis.cancel(); } }catch(e){}
+  // remove all existing bubbles from the screen
+  bubbles.forEach((meta,id)=>{
+    try{ if (meta.el && meta.el.parentNode) meta.el.parentNode.removeChild(meta.el); }catch(e){}
+  });
+  bubbles.clear();
+  // hide touch keyboard if visible
+  try{ if (touchKeyboard) touchKeyboard.style.display = 'none'; }catch(e){}
+  // update UI buttons: game ended so allow reset, but disable start until reset
+  startBtn.disabled = true;
+  resetBtn.disabled = false;
+  // show the final message clearly
+  const msg = customMessage || `Game Over! Score: ${score}`;
+  info.textContent = msg;
   info.style.display = 'block';
+  // show a large Game Over in the big timer area for emphasis
+  try{ const big = document.getElementById('bigTimer'); if (big){ big.textContent = 'GAME OVER'; big.style.display = 'block'; }}catch(e){}
   timerEl.textContent = `Time: 0.0s`;
 }
+
+// Auto-start the game when the page fully loads
+window.addEventListener('load', ()=>{
+  // small delay so layout and styles settle, then start
+  setTimeout(()=>{
+    try{ startGame(); }catch(e){}
+  }, 150);
+});
 
 // Open a right-side iframe showing the 1-minute timer page and close it after gameDuration
 function openSplitTimer(){

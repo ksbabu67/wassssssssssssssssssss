@@ -11,6 +11,8 @@ body{font-family:Inter, system-ui, Arial, sans-serif;background:linear-gradient(
 #gameArea{flex:1;position:relative;overflow:hidden}
 .overlay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(2,6,23,0.6);padding:20px;border-radius:10px}
 .hint{position:absolute;right:18px;top:18px;background:rgba(255,255,255,0.06);padding:12px 14px;border-radius:10px;font-size:20px;color:#fff}
+/* make the small topbar timer compact */
+.topbar .timer{font-size:13px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.03);color:rgba(230,238,248,0.95)}
 .footer{padding:10px;text-align:center;font-size:13px;opacity:0.8}
 
 .original-link{margin-left:12px;color:rgba(230,238,248,0.9);font-size:13px;text-decoration:underline}
