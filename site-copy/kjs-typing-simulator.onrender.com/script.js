@@ -54,8 +54,7 @@ let startTime = 0;
 // game duration in seconds (1 minute)
 let gameDuration = 60;
 // external split-screen timer iframe references
-let externalTimerFrame = null;
-let externalTimerTimeout = null;
+// removed external split-screen timer iframe (no external iframe will be opened)
 
 function rand(min,max){return Math.random()*(max-min)+min}
 
@@ -141,8 +140,7 @@ function startGame(){
   gameArea.focus();
   // show touch keyboard on small screens
   if (window.innerWidth <= 700) buildTouchKeyboard();
-  // open an external split-screen 1-minute timer on larger screens
-  if (window.innerWidth > 700) openSplitTimer();
+  // (split-screen timer removed)
 }
 
 function resetGame(){
@@ -162,8 +160,6 @@ function resetGame(){
   updateCollected();
   updateScore();
   timerEl.textContent = 'Time: 0.0s';
-  // ensure any external timer iframe is removed
-  closeSplitTimer();
   // clear any big timer/game over display
   clearBigTimer();
   // remove play again button if present
@@ -317,7 +313,6 @@ function endGame(customMessage){
   clearInterval(spawnInterval);
   spawnInterval = null;
   // cleanup external iframe if present
-  closeSplitTimer();
   // cancel any speaking
   try{ if (window.speechSynthesis) { window.speechSynthesis.cancel(); } }catch(e){}
   // remove all existing bubbles from the screen
@@ -366,52 +361,7 @@ window.addEventListener('load', ()=>{
 });
 
 // Open a right-side iframe showing the 1-minute timer page and close it after gameDuration
-function openSplitTimer(){
-  // don't create multiple frames
-  if (externalTimerFrame) return;
-  try{
-    externalTimerFrame = document.createElement('iframe');
-    externalTimerFrame.id = 'externalTimerFrame';
-    externalTimerFrame.src = 'https://vclock.com/set-timer-for-1-minute/';
-    externalTimerFrame.style.position = 'fixed';
-    externalTimerFrame.style.top = '0';
-    externalTimerFrame.style.right = '0';
-    externalTimerFrame.style.width = '40%';
-    externalTimerFrame.style.height = '100%';
-    externalTimerFrame.style.borderLeft = '2px solid rgba(0,0,0,0.12)';
-    externalTimerFrame.style.zIndex = '9999';
-    externalTimerFrame.style.background = '#fff';
-    document.body.appendChild(externalTimerFrame);
-
-    // shrink game area so it looks like split-screen
-    gameArea.style.width = '60%';
-    gameArea.style.float = 'left';
-
-    // ensure we remove the frame and end the game after gameDuration seconds
-    externalTimerTimeout = setTimeout(()=>{
-      // show Game Over and end the game
-      endGame(`Game Over! Score: ${score}`);
-    }, gameDuration * 1000);
-  }catch(e){
-    // silently fail if iframe insertion is blocked
-    externalTimerFrame = null;
-    externalTimerTimeout = null;
-  }
-}
-
-function closeSplitTimer(){
-  if (externalTimerTimeout){
-    clearTimeout(externalTimerTimeout);
-    externalTimerTimeout = null;
-  }
-  if (externalTimerFrame){
-    try{ externalTimerFrame.remove(); }catch(e){}
-    externalTimerFrame = null;
-  }
-  // restore game area layout
-  gameArea.style.width = '';
-  gameArea.style.float = '';
-}
+// split-screen timer removed: no external iframe is created or closed
 
 // bind click on bubbles to pop (bonus)
 gameArea.addEventListener('click', (e)=>{
