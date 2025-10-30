@@ -1,0 +1,7 @@
+{
+  "hosting": {
+    "public": "site-copy/kjs-typing-simulator.onrender.com",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "cleanUrls": true
+  }
+}
